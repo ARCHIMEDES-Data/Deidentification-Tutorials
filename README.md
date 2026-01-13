@@ -13,7 +13,7 @@ source venv/bin/activate
 #### Install dependencies
 ```
 pip install uv
-uv sync
+uv sync --active
 ```
 
 #### Run Jupyter Server (Optional. Enables ability to launch notebook from MyST)
