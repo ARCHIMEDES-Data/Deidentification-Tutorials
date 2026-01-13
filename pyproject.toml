@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Deidentification-Tutorials"
+version = "0.1.0"
+description = "Tutorials for deidentifying CMR data"
+requires-python = ">=3.10"
+authors = [
+  {name = "Nadia Farrag", email = "nafarrag@ottawaheart.ca"},
+  {name = "Jefferson Casimir", email = "jefferson.casimir@mcgill.ca"},
+]
+license = {file = "CC-BY-4.0"}
+readme = "README.md"
+dependencies = [
+  "pydicom",
+  "numpy",
+  "matplotlib",
+  "pillow",
+]
+[project.optional-dependencies]
+dev = [
+  "uv",
+  "jupyter",
+  "jupyterlab_myst",
+  "jupytext",
+  "mystmd",
+]

@@ -1,0 +1,10 @@
+# Python
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+Deidentification_Tutorials.egg-info/
+*.ipynb
+
+# MyST build outputs
+_build

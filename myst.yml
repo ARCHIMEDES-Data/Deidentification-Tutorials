@@ -1,0 +1,47 @@
+version: 1
+project:
+  title: Deidentification Tutorials
+  jupyter:
+    server:
+      url: http://localhost:8888/
+      token: 0123456789abcdef0123456789abcdef0123456789abcdef
+  authors:
+    - name: Nadia Farrag
+      affiliations: ohi;
+    - name: Jefferson Casimir
+      affiliations: mcgill;
+  affiliations:
+    - id: ohi
+      institution: University of Ottawa
+      ror: https://ror.org/05jtef216
+      department: University of Ottawa Heart Institute
+      address: 40 Ruskin St
+      city: Ottawa
+      region: Ontario
+      country: Canada
+      postal_code: K1Y 4W7
+    - id: mcgill
+      institution: McGill University
+      ror: https://ror.org/01pxwe438
+      department: Montreal Neurological Institute
+      address: 3801 University St
+      city: Montreal
+      region: Quebec
+      country: Canada
+      postal_code: H3A 2B4
+  keywords:
+  github: https://github.com/ARCHIMEDES-Data/Deidentification-Tutorials
+  venue: Demo
+  subject: Living Preprint
+  numbering:
+    headings: true
+  doi: TBD
+  open_access: true
+  license: CC-BY-4.0
+  abbreviations:
+    MyST: Markedly Structured Markdown
+    CMR: Cardiac Magnetic Resonance Imaging
+  toc:
+    - file: src/DeID_Tutorial_DICOM.md
+site:
+  template: book-theme
