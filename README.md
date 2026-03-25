@@ -1,19 +1,28 @@
 # Deidentification-Tutorials
 
-This repository contains tutorials for deidentifying CMR data.
+This script-style Jupyter notebook introduces researchers to Python-based tools for reducing identifiability in DICOM data. It demonstrates common technical approaches used in de-identification workflows, with examples informed in part by HIPAA Safe Harbor concepts for identifiers commonly removed from health data.
 
-## MyST Guide
+It allows users to:
+- Use either a sample or custom DICOM file
+- Choose specific tags to clear, mask, generalize, pseudonymize, or suppress
+- Filter and batch process files from a folder
 
-#### In the terminal, navigate to the root directory of this project and create a virtual environment, then activate it
+
+#### NOTE:
+This tutorial is provided for educational and research workflow support only.
+**It does not provide legal advice, and it does not by itself determine whether data are de-identified, anonymized, or otherwise compliant under any specific law or institutional policy.**
+Users are responsible for ensuring that their data handling practices meet the requirements of the laws, regulations, ethics approvals, data sharing agreements, and institutional policies applicable to their project.
+
+**For Canadian users:**
+Methods commonly used to satisfy HIPAA de-identification standards are not automatically sufficient for data to be considered anonymized or non-identifiable under Canadian laws. In many Canadian contexts, data that have undergone HIPAA-style de-identification may still be treated as coded or potentially identifiable. Consult your institution, privacy office, REB, or legal/privacy experts where appropriate.
+
+## Install Guide (MyST)
+
+#### In the terminal, navigate to the root directory of this project and create a virtual environment, activate it, then install the dependicies
 ```
 python -m venv venv
 source venv/bin/activate
-```
-
-#### Install dependencies
-```
-pip install uv
-uv sync --active
+pip install -e .
 ```
 
 #### Run Jupyter Server (Optional. Enables ability to launch notebook from MyST)

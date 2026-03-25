@@ -7,25 +7,28 @@ jupyter:
       format_version: '1.3'
       jupytext_version: 1.18.1
   kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
+    display_name: Python 3
     name: python3
 ---
 
 <!-- #region id="Erl8u-UXtf3N" -->
 # De-Identification of DICOM Data - Jupyter Notebook Tutorial
 
-This script-style Jupyter notebook introduces researchers to Python-based tools for de-identifying DICOM data, referencing HIPAA Safe Harbor guidelines and PIPEDA.
+This script-style Jupyter notebook introduces researchers to Python-based tools for reducing identifiability in DICOM data. It demonstrates common technical approaches used in de-identification workflows, with examples informed in part by HIPAA Safe Harbor concepts for identifiers commonly removed from health data.
 
 It allows users to:
 - Use either a sample or custom DICOM file
-- Choose specific tags to clear, mask, or generalize
+- Choose specific tags to clear, mask, generalize, pseudonymize, or suppress
 - Filter and batch process files from a folder
 
 ----
-NOTE: This tutorial is for educational purposes only. It does not offer a de-identification service but shows you how to approach de-identification in your own research workflow.
+# NOTE:
+This tutorial is provided for educational and research workflow support only.
+**It does not provide legal advice, and it does not by itself determine whether data are de-identified, anonymized, or otherwise compliant under any specific law or institutional policy.**
+Users are responsible for ensuring that their data handling practices meet the requirements of the laws, regulations, ethics approvals, data sharing agreements, and institutional policies applicable to their project.
 
-
+**For Canadian users:**
+Methods commonly used to satisfy HIPAA de-identification standards are not automatically sufficient for data to be considered anonymized or non-identifiable under Canadian laws. In many Canadian contexts, data that have undergone HIPAA-style de-identification may still be treated as coded or potentially identifiable. Consult your institution, privacy office, REB, or legal/privacy experts where appropriate.
 <!-- #endregion -->
 
 <!-- #region id="4v_KW8yItzXt" -->
@@ -33,7 +36,7 @@ NOTE: This tutorial is for educational purposes only. It does not offer a de-ide
 
 <!-- #endregion -->
 
-```python colab={"base_uri": "https://localhost:8080/"} id="OYeaNg3U9XqC" outputId="8298d90e-f0a0-459f-a6be-cc5cfa538a1f"
+```python colab={"base_uri": "https://localhost:8080/"} id="OYeaNg3U9XqC" outputId="4e7ad0f1-751d-4801-a9e9-2b36374d9342"
 !pip install pydicom #the ! will be removed when taken off colab
 # pip install numpy --> commented until taken off of Colab
 # pip install matplotlib --> commented until taken off of Colab
@@ -43,6 +46,7 @@ NOTE: This tutorial is for educational purposes only. It does not offer a de-ide
 ```
 
 ```python id="Ro_xHC3grCn6"
+# @title
 import os
 import pydicom
 from pydicom.data import get_testdata_files
@@ -149,7 +153,7 @@ User can choose to use their own dicom image or use the pydicom sample image for
 
 ```python id="k-yyXngptUOk"
 USE_SAMPLE = False  # Set to False if you want to use your own image
-custom_path = "/content/11943782" # <-- update this path after dragging & dropping your dicom file into the Google Colab Files section.
+custom_path = "/content/TEST_04Nov2025.MR.THORAX_Cardiac.1001.3.2025.11.04.12.54.56.434.53911847.dcm" # <-- update this path after dragging & dropping your dicom file into the Google Colab Files section.
 
 if USE_SAMPLE:
     from pydicom.data import get_testdata_files
@@ -158,17 +162,16 @@ else:
     dicom_path = custom_path
 
 ds = pydicom.dcmread(dicom_path) #dicom file to play with in the demos
-ds_baseline = pydicom.dcmread(dicom_path)  # fresh, untouched copy for demos
+ds_baseline = pydicom.dcmread(dicom_path)  #untouched copy for demos
 ```
 
 <!-- #region id="XQi9SxaMuJDu" -->
-# 2. HIPAA Safe Harbor Rule - Identifiers to Remove (expand to see the list)
+# 2. Example identifiers commonly considered during DICOM de-identification
 
 <!-- #endregion -->
 
 <!-- #region id="ml7eH5p2rlru" -->
-
-The Safe Harbor method from HIPAA requires the removal of 18 identifiers. Some relevant ones for DICOM include:
+One commonly cited framework is the HIPAA Safe Harbor method, which identifies 18 categories of identifiers that are typically removed from health data. For DICOM files, examples may include:
 
 1. Names
 2. Geographic subdivisions smaller than a state
@@ -189,7 +192,7 @@ The Safe Harbor method from HIPAA requires the removal of 18 identifiers. Some r
 17. Full-face photos or comparable images
 18. Any unique identifying number, characteristic, or code
 
-These may correspond to the following DICOM tags:
+Some of these may correspond to DICOM metadata fields such as:
 - (0010,0010) PatientName
 - (0008,0081) InstitutionAddress
 - (0008,0022) Acquisition Date
@@ -203,13 +206,14 @@ These may correspond to the following DICOM tags:
 - (0018,1000) DeviceSerialNumber
 - ... and many more
 
+This is not a complete or universally sufficient list. The metadata elements that should be reviewed or modified depend on the file content, project context, jurisdiction, and intended data use.
 <!-- #endregion -->
 
 <!-- #region id="Rz2fb5J7uV_p" -->
 # 3. Load Sample DICOM File
 <!-- #endregion -->
 
-```python colab={"base_uri": "https://localhost:8080/", "height": 428} id="iRP8O4wuuIwR" outputId="bb385e7c-cb68-478d-c352-4899fb956983"
+```python colab={"base_uri": "https://localhost:8080/", "height": 428} id="iRP8O4wuuIwR" outputId="3112c39a-b162-42a2-abee-f3cb30b3cdd7"
 img = ds_baseline.pixel_array
 
 # Display the image
@@ -220,7 +224,7 @@ plt.show()
 ```
 
 <!-- #region id="sSemIvBAub9X" -->
-#4. Inspect PHI-Containing Metadata
+#4. Inspect metadata that may contain personal or identifying information
 <!-- #endregion -->
 
 <!-- #region id="mZbphsRQH0na" -->
@@ -228,10 +232,10 @@ A great resource to reference DICOM metadata tags can be found here: https:/www.
 
 
 
-Check your DICOM file carefully for all PHI-containing fields and correspond to this resource as a guideline.
+Review your DICOM file carefully for metadata fields that may contain direct identifiers, indirect identifiers, dates, site information, device information, or other elements that could contribute to re-identification risk.
 <!-- #endregion -->
 
-```python colab={"base_uri": "https://localhost:8080/"} id="k1wa3JZoueUV" jupyter={"outputs_hidden": true} outputId="44b5ab39-e545-448a-e176-17680e56a12c"
+```python colab={"base_uri": "https://localhost:8080/"} id="k1wa3JZoueUV" outputId="50b0682d-4ff2-4862-8dcb-457af9343a3c"
 print("\n--- ALL METADATA BEFORE DE-IDENTIFICATION ---")
 for elem in ds:
     if elem.VR != "OB" and elem.tag.group != 0x7FE0:
@@ -239,23 +243,24 @@ for elem in ds:
 ```
 
 <!-- #region id="1OGb8kpTHMcz" -->
-Metadata tags containing dates may include the following tags:
+Metadata tags containing dates may include fields such as:
 
 *   Study date
 *   Series date
 *   Acquisition date
+*   Content date
+*   Patient birth date
 *   ... and so on.
 
+Some dates may be directly identifying on their own, while others may increase re-identification risk when combined with other information. The example below is not a complete list. DICOM files can contain many date-related attributes, so the original identified file should always be reviewed carefully.
 
 Below are some example metadata tags containing dates.
 -----
 
-**Please note that this is NOT a conclusive list** - there are up to 88 metadata tags that may contain dates. You should always carefully inspect your original (identified) image to determine all fields that contain dates.
-
-
+**Please note that this is NOT a conclusive list** - the DICOM standard is constantly evolving, and many metadata tags may contain dates. You should always carefully inspect your original (identified) image to determine all fields that contain dates.
 <!-- #endregion -->
 
-```python colab={"base_uri": "https://localhost:8080/"} id="FQJRTGE-HIbL" outputId="8201741d-23a2-4814-e02f-73b0b75da1c7"
+```python colab={"base_uri": "https://localhost:8080/"} id="FQJRTGE-HIbL" outputId="1b66d8af-3229-4d66-ab25-0e42e573dbc0"
 date_tags = {
     (0x0008, 0x0020): "Study Date",
     (0x0008, 0x0021): "Series Date",
@@ -316,16 +321,20 @@ DEID_MAP = {
 ```
 
 <!-- #region id="fNzTj5l8umqG" -->
-# 5. Anonymization and Pseudonymization Options
+# 5. Common de-identification techniques demonstrated in this notebook
+<!-- #endregion -->
+
+<!-- #region id="DUNrsdNKczAZ" -->
+This section demonstrates several technical strategies that can be applied to DICOM metadata. These examples are intended to illustrate common approaches used in research workflows. Whether a given approach is appropriate or sufficient depends on the data, context, and applicable governance requirements.
 <!-- #endregion -->
 
 <!-- #region id="My1OgugMuniu" -->
-# A. Direct Clearing of Tags (Anonymization)
+# A. Direct Clearing of Tags
 
 <!-- #endregion -->
 
 <!-- #region id="gcpSxfWBWuaO" -->
-*Anonymization* is the total removal of PHI - i.e., full deletion. It is often used for targeted clearing of known identifiers, such as the patient's name.
+Direct clearing means removing selected metadata elements entirely. This can be useful when a field is known to contain a direct identifier or other information that is not needed for the intended research use.
 
 See below the python function followed by the demo.
 <!-- #endregion -->
@@ -339,7 +348,7 @@ def clear_tags(ds, tags_to_clear):
     return ds
 ```
 
-```python colab={"base_uri": "https://localhost:8080/"} id="R9G7yvedU--7" outputId="8719d85f-8ebb-4adb-effa-86bf56b6421a"
+```python colab={"base_uri": "https://localhost:8080/"} id="R9G7yvedU--7" outputId="9d1e74db-cad1-4f8d-9739-834a3faa6278"
 _demoA_before = ds_baseline.copy()
 _demoA_after = ds.copy()
 _demoA_after = clear_tags(_demoA_after, ["InstanceCreationDate"])
@@ -353,7 +362,7 @@ print_before_after(_demoA_before, _demoA_after, ["InstanceCreationDate"])
 <!-- #endregion -->
 
 <!-- #region id="FSBCBii2hGbd" -->
-*Masking* replaces sensitive values with a neutral placeholder (e.g., “REDACTED” or “UNKNOWN”), so the tag remains present but no longer reveals true information.
+Masking replaces an original value with a generic placeholder such as “REDACTED” or “UNKNOWN.” The field remains present, but the original value is no longer shown.
 
 See the python function below, followed by a demo.
 <!-- #endregion -->
@@ -375,7 +384,7 @@ def mask_tags(ds, replacements):
     return ds
 ```
 
-```python colab={"base_uri": "https://localhost:8080/"} id="Q5LeUVYbXJZl" outputId="c3aa9fd6-a6a1-41e6-feca-e90ecb1a9dcc"
+```python colab={"base_uri": "https://localhost:8080/"} id="Q5LeUVYbXJZl" outputId="c6789a51-ea90-4c3e-c2c1-de51a61f0c97"
 _demoB_before = ds_baseline.copy()
 _demoB_after = ds.copy()
 _demoB_after = mask_tags(_demoB_after, {"InstitutionName": "REDACTED HOSPITAL"})
@@ -388,11 +397,11 @@ print_before_after(_demoB_before, _demoB_after, ["InstitutionName"])
 <!-- #endregion -->
 
 <!-- #region id="FIwd3LMAhWRk" -->
-*Generalization* keeps only coarse information while discarding details.
+Generalization reduces specificity while retaining some analytic usefulness.
 
 For general applications, generalization may involve "binning" data into broader ranges to reduce specificity - e.g., binning the age 43 into the range 40 - 45. However, in the DICOM Standard, we are unable to store data in ranges because attributes such as Date (DA) must follow a strict YYYYMMDD format.
 
-A practical way to demonstrate generalization is to preserve only the birth year and replace the month and day with a dummy value. This reduces specificity — the exact birth date is hidden — while still retaining useful coarse information (the year of birth).
+A practical way to demonstrate generalization is to preserve only the birth year and replace the month and day with a dummy value. This reduces specificity as the exact birth date is hidden, while still retaining useful coarse information (the year of birth).
 
 See the python function below, followed by a demo.
 <!-- #endregion -->
@@ -410,7 +419,7 @@ def generalize_date(ds, tag="PatientBirthDate", seed=None):
     return ds
 ```
 
-```python colab={"base_uri": "https://localhost:8080/"} id="48dDjD-LXWeR" outputId="a21d7914-a6ce-4a5e-da66-05a1be5c904f"
+```python colab={"base_uri": "https://localhost:8080/"} id="48dDjD-LXWeR" outputId="4557ad27-6f69-42d7-d3c0-0b4bb71fe971"
 _demoC_before = ds_baseline.copy()
 _demoC_after  = ds.copy()
 _demoC_after  = generalize_date(_demoC_after)
@@ -419,11 +428,11 @@ print_before_after(_demoC_before, _demoC_after, ["PatientBirthDate"])
 ```
 
 <!-- #region id="mDagzWJivnCO" -->
-# D. Noise / Perturbation (e.g., shift date)
+# D. Date shifting / perturbation
 <!-- #endregion -->
 
 <!-- #region id="b2Zp9u8Ghj0s" -->
-*Noise* means adding small random changes to data so that exact values are hidden, but analytic utility is preserved. In DICOM de-identification, the most common example is shifting dates by a random offset (e.g., ±90 days). This ensures that relative time intervals within a study remain intact (important for longitudinal analysis) while removing the original, identifiable calendar dates.
+Perturbation means modifying values slightly so that exact original values are hidden while some analytic utility is preserved. In DICOM workflows, a common example is shifting dates by a random offset. This can help protect identifiable calendar dates while preserving relative timing within a study.
 
 See below for a demo.
 <!-- #endregion -->
@@ -449,23 +458,25 @@ def shift_date(ds, tag="StudyDate", max_shift_days=90):
     return ds
 ```
 
-```python colab={"base_uri": "https://localhost:8080/"} id="AP4Ulnl7a0pQ" outputId="246b43d9-df95-47b4-d93a-488b8873e3a7"
+```python colab={"base_uri": "https://localhost:8080/"} id="AP4Ulnl7a0pQ" outputId="89784b80-6411-46a3-fc03-58d08973cffd"
 _demoD_before = ds_baseline.copy()
 _demoD_after  = ds.copy()
 
 shift_date(_demoD_after, tag="StudyDate", max_shift_days=90)
 
-print("D) NOISE example: StudyDate shifted randomly ±90 days")
+print("D) DATE SHIFT example: StudyDate shifted randomly ±90 days")
 print_before_after(_demoD_before, _demoD_after, ["StudyDate"])
 
 ```
 
 <!-- #region id="EzGcaZ4Ivsc_" -->
-# E. Pseudonymization: Encrypted Patient ID
+# E. Pseudonymization: coded patient ID
 <!-- #endregion -->
 
 <!-- #region id="Zs1SewSgkRup" -->
-Pseudonymization replaces identifiers with a consistent code (e.g., a hash). The same input always produces the same pseudonym, which lets researchers link records without knowing the real identity.
+Pseudonymization replaces an identifier with a consistent coded value, such as a hash. The same input produces the same pseudonym, which can support linkage across records without revealing the original value directly.
+
+Pseudonymized data may still be considered identifiable, depending on whether re-linkage is possible and how the keying or coding process is governed.
 
 See below for a demo.
 <!-- #endregion -->
@@ -479,7 +490,7 @@ if 'PatientID' in ds:
     pass  # we'll show it in the demo below
 ```
 
-```python colab={"base_uri": "https://localhost:8080/"} id="xjqpjGpQbD-v" outputId="17c974ce-eef0-4ce2-9e53-3abfaae378a5"
+```python colab={"base_uri": "https://localhost:8080/"} id="xjqpjGpQbD-v" outputId="b3e99e26-592a-40e9-ae6f-d780da4a6aa3"
 _demoE_before = ds_baseline.copy()
 _demoE_after = ds.copy()
 if 'PatientID' in _demoE_after:
@@ -490,21 +501,29 @@ print_before_after(_demoE_before, _demoE_after, ["PatientID"])
 ```
 
 <!-- #region id="kdYiBtYiv9Yb" -->
-# F. Suppression: Remove entire tags
+# F. Suppression: removing fields that may increase identification risk
 <!-- #endregion -->
 
 <!-- #region id="5Pj967Z-ksrb" -->
-According to HIPAA, suppression means deleting data elements so they cannot be used for re-identification. In practice, suppression can be applied in two ways:
+Suppression is a general de-identification technique in which data elements are removed so they cannot be used directly or indirectly to identify an individual. In practice, suppression may be applied in different ways, such as:
+
+
+*   Broad removal of categories of fields that may contain identifying content, such as private DICOM elements
+
+*   Selective removal of fields whose presence may increase re-identification risk in a particular context
 
 
 
-*   Broad deletion of entire categories of fields that might contain identifiers (e.g., removing all “private” DICOM elements).
+In this notebook, suppression is demonstrated by removing private DICOM elements. This is presented as a general technical strategy used in de-identification workflows. It is not intended to suggest that “suppression” is a formally defined HIPAA term. Rather, HIPAA interpretive guidance discusses the removal of identifiers and the need to reduce the risk that individuals can be identified from the remaining data.
 
-*   Conditional deletion of quasi-identifiers when their presence could raise re-identification risk. For example, ZIP code might be suppressed in a dataset describing a rare disease (where ZIP + diagnosis could single out an individual), but retained if the dataset were about a very common condition like influenza, where the risk of identification is low.
+We separate suppression here from direct clearing by scope:
+
+*   direct clearing removes specific known fields selected by the user
+
+*   suppression removes broader groups of fields or fields that may become identifying in context
 
 ----
 
-In this tutorial we separate suppression from targeted anonymization (Function A) by scope: anonymization deletes specific known identifiers, while suppression is used to remove fields — broadly or selectively — that might still allow someone to be identified in context.
 
 See below for a demo.
 <!-- #endregion -->
@@ -521,7 +540,7 @@ def suppress_private(ds):
     return ds
 ```
 
-```python colab={"base_uri": "https://localhost:8080/"} id="Tqdd_UFYbNFw" outputId="b544441d-7f21-4397-e5b5-1ab0594801c0"
+```python colab={"base_uri": "https://localhost:8080/"} id="Tqdd_UFYbNFw" outputId="1e6474a7-7c5a-4ee6-cbc2-bb3484774ae9"
 _demoF = ds.copy()
 n_before = sum(1 for e in _demoF if e.tag.group % 2 == 1)
 _demoF = suppress_private(_demoF)
@@ -531,13 +550,37 @@ print(f"F) SUPPRESS example: private elements {n_before} → {n_after}")
 ```
 
 <!-- #region id="AI29BwTx4nkE" -->
-# 8. Handling Burned-in Annotations (Ultrasound etc.)
+# 8. Handling Burned-in Annotations in Pixel Data
 
-Some DICOMs include burned-in PHI in the pixel data (e.g., patient names).
+Some DICOM files contain identifying information directly in the image pixels rather than only in the metadata. Examples may include patient names, accession numbers, dates, or site identifiers burned into the image.
+
 Two possible strategies:
 1. Masking using black boxes
 2. Cropping the image
+
+Pixel-based identifiers should be reviewed carefully, especially in modalities such as ultrasound or secondary capture images.
 <!-- #endregion -->
+
+```python id="Zp-kEC29k_nn"
+US_path = "/content/ultrasound_image1.dcm" # <-- update this path after dragging & dropping your dicom file into the Google Colab Files section.
+
+us_ds = pydicom.dcmread(US_path) #dicom file to play with in the demos
+us_ds_baseline = pydicom.dcmread(US_path)  #untouched copy for demos
+```
+
+<!-- #region id="S_hVPdFKlZ_s" -->
+## Original Ultrasound Image
+<!-- #endregion -->
+
+```python colab={"base_uri": "https://localhost:8080/", "height": 338} id="u-LBahwIlWUc" outputId="779303be-bab5-475d-f60c-ac584a3d5181"
+us_img = us_ds_baseline.pixel_array
+
+# Display the image
+plt.imshow(us_img, cmap='gray')
+plt.title("Example Ultrasound image (original)")
+plt.axis('off')
+plt.show()
+```
 
 ```python id="Q1NBvBAOgHlf"
 import random
@@ -559,26 +602,19 @@ def blackout_region(ds, x1, y1, x2, y2):
 
 ```
 
-```python colab={"base_uri": "https://localhost:8080/", "height": 794} id="23cuN-GmgKwT" outputId="244c1c7d-6762-4a87-f85e-3ff84dc9386b"
+```python colab={"base_uri": "https://localhost:8080/", "height": 319} id="23cuN-GmgKwT" outputId="802b0c2d-ab2b-416c-e899-c4d2d2424aa8"
 if 'PixelData' in ds:
-    arr = ds.pixel_array
+    arr = us_ds.pixel_array
 
-    # random box for demo
-    h, w = arr.shape
-    x1, x2 = sorted(random.sample(range(w), 2))
-    y1, y2 = sorted(random.sample(range(h), 2))
+    # === USER INPUT ===
+    CROP_START_ROW = 71  # change this value (e.g., where the top blue bar ends)
 
-    # crop
-    cropped = crop_image(ds, x1, y1, x2, y2)
+    # Crop from that row to the bottom
+    cropped = arr[CROP_START_ROW:, :]
+
+     # Display result
     plt.imshow(cropped, cmap='gray')
-    plt.title(f"Cropped region ({x1},{y1})→({x2},{y2})")
-    plt.axis('off')
-    plt.show()
-
-    # blackout
-    masked = blackout_region(ds, x1, y1, x2, y2)
-    plt.imshow(masked, cmap='gray')
-    plt.title(f"Black box region ({x1},{y1})→({x2},{y2})")
+    plt.title(f"Cropped image (removed top {CROP_START_ROW} rows)")
     plt.axis('off')
     plt.show()
 
@@ -592,7 +628,12 @@ if 'PixelData' in ds:
 ###Apply the mapping table to de-id selected metadata tags.
 <!-- #endregion -->
 
-```python colab={"base_uri": "https://localhost:8080/"} id="IjkKtUqcbeqv" outputId="b659c77e-e07d-4b09-c7d2-8d041e29adeb"
+<!-- #region id="usdMlarcemrl" -->
+Note:
+Applying these transformations does not on its own guarantee that the output file is non-identifiable under any specific legal or institutional standard. Always review both metadata and pixel data, assess residual re-identification risk, and validate the output before sharing or publishing.
+<!-- #endregion -->
+
+```python colab={"base_uri": "https://localhost:8080/"} id="IjkKtUqcbeqv" outputId="4bdcf49a-cf6b-4e01-bbd6-58654c69b7b6"
 # === Apply the DEID_MAP plan (optional one-click step) ===
 def apply_plan(ds, plan):
     # A) clear
@@ -604,9 +645,12 @@ def apply_plan(ds, plan):
     # C) generalize
     if plan.get("generalize"):
         ds = generalize_date(ds, plan["generalize"])
-    # D) noise
+   # D) date shift / perturbation
     if plan.get("noise"):
-        ds = noise_tags(ds, plan["noise"])
+      for tag, settings in plan["noise"].items():
+        if settings.get("type") == "date_shift":
+            max_shift = settings.get("range", 90)
+            ds = shift_date(ds, tag=tag, max_shift_days=max_shift)
     # E) pseudonymize
     if plan.get("pseudonymize"):
         for t in plan["pseudonymize"]:
@@ -635,7 +679,7 @@ for k, v in values_of(ds_plan, ["PatientID", "PatientName", "PatientBirthDate", 
 
 ```
 
-```python id="FaqYsn094i_W"
+```python id="FaqYsn094i_W" colab={"base_uri": "https://localhost:8080/"} outputId="219343ca-821d-4849-97bb-9d8caa5ba86d"
 output_path = "deidentified_output.dcm"
 ds.save_as(output_path)
 print(f"\nSaved de-identified DICOM to: {output_path}")
@@ -652,6 +696,9 @@ Other useful tools/libraries:
 - `dcm2niix` (command-line tool for research pipelines)
 - `pynetdicom` for secure DICOM transfer
 
-Always test your de-identified files to ensure complete removal of PHI before sharing or publishing.
+-----
+Always validate your output files before sharing or publishing. Review metadata, inspect pixel data for burned-in identifiers, and confirm that the transformations applied are appropriate for your project, governance requirements, and jurisdiction.
+
+For projects involving Canadian data, remember that technical de-identification steps alone may not be enough for data to be considered anonymized or non-identifiable in law or policy.
 
 <!-- #endregion -->
