@@ -57,7 +57,7 @@ Changes made to the content will trigger a refresh of the MyST website
 
 ## Contribution Guide
 
-Use [Jupytext](https://jupytext.readthedocs.io/en/latest/) to sync your Jupyter notebooks according to [jupytext.toml](jupytext.toml).
+Use [Jupytext](https://jupytext.readthedocs.io/en/latest/) to sync (or create) your Jupyter notebooks according to [jupytext.toml](jupytext.toml).
 
 ```
 jupytext --sync src/*.md
