@@ -14,6 +14,12 @@ jupyter:
 <!-- #region id="Erl8u-UXtf3N" -->
 # **De-Identification of DICOM Data - Jupyter Notebook Tutorial**
 
+**Authors:**
+Nadia Farrag, Ph.D. &
+Jefferson Casimir
+
+---
+
 This script-style Jupyter notebook introduces researchers to Python-based tools for reducing identifiability in DICOM data. It demonstrates common technical approaches used in de-identification workflows, with examples informed in part by the Information and Privacy Commissioner of Ontario (IPC) & HIPAA Safe Harbor concepts for identifiers commonly removed from health data.
 
 *This tutorial assumes a basic working knowledge of Python coding and familiarity with running Jupyter notebooks.*
@@ -1053,4 +1059,32 @@ Always validate and review output files before saving, sharing, or publishing th
 
 
 For projects involving Canadian data, remember that technical de-identification steps alone may not be enough for data to be considered anonymized or non-identifiable under law or institutional policy.
+<!-- #endregion -->
+
+<!-- #region id="BL5P_FeQQ_ps" -->
+# References & Acknowledgements
+<!-- #endregion -->
+
+<!-- #region id="MoIGYoL0RD2h" -->
+This tutorial makes use of several open-source Python libraries and tools, including:
+
+**Python libraries/packages:**
+*   pydicom — https://pydicom.github.io/
+*   NumPy — https://numpy.org/
+*   Matplotlib — https://matplotlib.org/
+*   Pillow (PIL) — https://python-pillow.org/
+*   hashlib (Python Standard Library) — https://docs.python.org/3/library/hashlib.html
+
+
+**Additional DICOM/de-identification resources referenced:**
+*   DICOM Standard — https://www.dicomstandard.org/
+*   Information and Privacy Commissioner of Ontario (IPC) De-Identification Guidelines - https://www.ipc.on.ca/en/resources/de-identification-guidelines-structured-data
+*   Personal Information Protection and Electronic Documents Act (PIPEDA) - https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/
+*   HIPAA Safe Harbor Guidance — https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html
+
+
+----
+
+Acknowledgement:
+This notebook was developed as part of educational and de-identification resource initiatives associated with the ARCHIMEDES platform.
 <!-- #endregion -->
