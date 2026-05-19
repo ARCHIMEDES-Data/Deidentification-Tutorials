@@ -34,7 +34,8 @@ Methods commonly used to satisfy HIPAA de-identification standards are not autom
 
 This tutorial can be run directly in Google Colab without installing Python, MyST, or JupyterLab locally.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/notebooks/url/https%3A%2F%2Fraw.githubusercontent.com%2FARCHIMEDES-Data%2FDeidentification-Tutorials%2Fmain%2Fsrc%2FDeID_Tutorial_DICOM.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ARCHIMEDES-Data/Deidentification-Tutorials/blob/main/src/DeID_Tutorial_DICOM.ipynb)
+
 
 ## Getting Started
 
