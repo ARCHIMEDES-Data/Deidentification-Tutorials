@@ -8,7 +8,7 @@ Jefferson Casimir
 
 This script-style Jupyter notebook introduces researchers to Python-based tools for reducing identifiability in DICOM data. It demonstrates common technical approaches used in de-identification workflows, with examples informed in part by the Information and Privacy Commissioner of Ontario (IPC) & HIPAA Safe Harbor concepts for identifiers commonly removed from health data. It uses existing python libraries such as ``pydicom``, ``matplotlib``, ``numpy``, etc. Please see the ``ipynb`` Jupyter notebook for references.
 
-*#This tutorial assumes a basic working knowledge of Python coding and familiarity with running Jupyter notebooks.*
+> *This tutorial assumes a basic working knowledge of Python coding and familiarity with running Jupyter notebooks.*
 
 It allows users to:
 
@@ -34,7 +34,7 @@ Methods commonly used to satisfy HIPAA de-identification standards are not autom
 
 This tutorial can be run directly in Google Colab without installing Python, MyST, or JupyterLab locally.
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ARCHIMEDES-Data/Deidentification-Tutorials/blob/main/src/DeID_Tutorial_DICOM.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ARCHIMEDES-Data/Deidentification-Tutorials/blob/main/src/DeID_Tutorial_DICOM.ipynb?forceRefresh=true)
 
 ## Getting Started
 
