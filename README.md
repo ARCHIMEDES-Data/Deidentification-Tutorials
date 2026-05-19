@@ -36,7 +36,6 @@ This tutorial can be run directly in Google Colab without installing Python, MyS
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ARCHIMEDES-Data/Deidentification-Tutorials/blob/main/src/DeID_Tutorial_DICOM.ipynb)
 
-
 ## Getting Started
 
 1. Click the “Open in Colab” button above.
