@@ -51,7 +51,7 @@ The notebook uses sample MRI and ultrasound image files included in this GitHub 
 
 The ultrasound video section is optional. To run it, users must upload their own de-identified ultrasound video DICOM file when prompted.
 
-> Important: Do not upload identifiable patient data unless you have appropriate approvals and institutional guidance.
+> Important: Do not upload identifiable patient data.
 
 ------------
 # Install Guide (MyST)
