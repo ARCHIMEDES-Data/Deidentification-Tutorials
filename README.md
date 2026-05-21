@@ -43,7 +43,7 @@ This tutorial can be run directly in Google Colab without installing Python, MyS
 ```python
 USE_ARCHIMEDES_SAMPLE = True #To use Archimedes sample images
 CUSTOM_DICOM_PATH = "" #Update to try with your own images
-
+```
 3. Select:
 
    ```text
