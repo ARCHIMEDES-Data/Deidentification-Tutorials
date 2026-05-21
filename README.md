@@ -35,6 +35,21 @@ This tutorial can be run directly in Google Colab without installing Python, MyS
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ARCHIMEDES-Data/Deidentification-Tutorials/blob/main/src/DeID_Tutorial_DICOM.ipynb)
 
+----------------------------------------
+The notebook includes a beginner-friendly configuration cell near the beginning of the tutorial.
+
+Users can choose between:
+
+- Using ARCHIMEDES sample DICOM files included in this repository
+- Using their own custom DICOM file
+
+When custom mode is selected, users must provide a valid file path to their DICOM file.
+
+The ultrasound/video DICOM section uses ARCHIMEDES sample ultrasound data and is automatically skipped when users select custom file mode.
+
+> Important: Do not upload identifiable patient data.
+----------------------------------------
+
 ## Getting Started
 
 1. Click the “Open in Colab” button above.
@@ -52,21 +67,8 @@ This tutorial can be run directly in Google Colab without installing Python, MyS
 
 4. Follow the tutorial cells step-by-step.
 
-The notebook includes a beginner-friendly configuration cell near the beginning of the tutorial.
-
-Users can choose between:
-
-- Using ARCHIMEDES sample DICOM files included in this repository
-- Using their own custom DICOM file
-
-When custom mode is selected, users must provide a valid file path to their DICOM file.
-
-The ultrasound/video DICOM section uses ARCHIMEDES sample ultrasound data and is automatically skipped when users select custom file mode.
-
-> Important: Do not upload identifiable patient data.
-
 ------------
-# Install Guide (MyST)
+# Install Guide (Run notebook in MyST)
 
 In the terminal, navigate to the root directory of this project, create a virtual environment, activate it, and install the dependencies:
 
