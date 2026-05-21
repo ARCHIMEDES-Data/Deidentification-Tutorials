@@ -40,10 +40,10 @@ This tutorial can be run directly in Google Colab without installing Python, MyS
 1. Click the “Open in Colab” button above.
 2. Configuration: Near the beginning of the notebook, update the configuration cell to your preferences:
 
-```python
-USE_ARCHIMEDES_SAMPLE = True #To use Archimedes sample images
-CUSTOM_DICOM_PATH = "" #Update to try with your own images
-```
+   ```python
+   USE_ARCHIMEDES_SAMPLE = True #To use Archimedes sample images
+   CUSTOM_DICOM_PATH = "" #Update to try with your own images
+   ```
 3. Select:
 
    ```text
