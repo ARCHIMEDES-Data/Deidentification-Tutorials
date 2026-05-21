@@ -12,12 +12,11 @@ This script-style Jupyter notebook introduces researchers to Python-based tools 
 
 It allows users to:
 
-*   Use either a sample or custom DICOM file
-*   Select specific DICOM tags and apply de-identification actions such as clearing, masking, generalization, pseudonymization, or suppression
-*   Filter and batch process files from a folder
-
-Select specific DICOM tags and apply de-identification actions such as clearing, masking, generalization, pseudonymization, or suppression
-Filter and batch process files from a folder
+* Use either ARCHIMEDES sample DICOM files or their own custom DICOM file
+* Configure the notebook using a single setup cell
+* Select specific DICOM tags and apply de-identification actions such as clearing, masking, generalization, pseudonymization, or suppression
+* Filter and batch process files from a folder
+* Explore optional ultrasound/video DICOM de-identification examples using ARCHIMEDES sample data
 
 --------------
 
@@ -39,17 +38,30 @@ This tutorial can be run directly in Google Colab without installing Python, MyS
 ## Getting Started
 
 1. Click the “Open in Colab” button above.
-2. Select:
+2. Configuration: Near the beginning of the notebook, update the configuration cell to your preferences:
+
+```python
+USE_ARCHIMEDES_SAMPLE = True #To use Archimedes sample images
+CUSTOM_DICOM_PATH = "" #Update to try with your own images
+
+3. Select:
 
    ```text
    Runtime → Run all
    ```
 
-3. Follow the tutorial cells step-by-step.
+4. Follow the tutorial cells step-by-step.
 
-The notebook uses sample MRI and ultrasound image files included in this GitHub repository.
+The notebook includes a beginner-friendly configuration cell near the beginning of the tutorial.
 
-The ultrasound video section is optional. To run it, users must upload their own de-identified ultrasound video DICOM file when prompted.
+Users can choose between:
+
+- Using ARCHIMEDES sample DICOM files included in this repository
+- Using their own custom DICOM file
+
+When custom mode is selected, users must provide a valid file path to their DICOM file.
+
+The ultrasound/video DICOM section uses ARCHIMEDES sample ultrasound data and is automatically skipped when users select custom file mode.
 
 > Important: Do not upload identifiable patient data.
 
